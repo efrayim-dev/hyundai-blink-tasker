@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BlueLink Tasker</string>
+    <string name="disclaimer_short">Unofficial app — not affiliated with Hyundai. Uses the same type of API access as community tools (e.g. bluelinky). Hyundai may change or block this at any time. Use at your own risk.</string>
+    <string name="vehicle_label">Vehicle: %1$s</string>
+    <string name="btn_unlock">Unlock</string>
+    <string name="btn_lock">Lock</string>
+    <string name="btn_start">Remote start</string>
+    <string name="btn_stop">Remote stop</string>
+    <string name="settings">Account &amp; vehicle</string>
+    <string name="tasker_help">Tasker setup</string>
+    <string name="tasker_help_body">1. Open Tasker → Tasks → add a task.\n2. Add action: System → Send Intent.\n3. Action: com.hyundaicompanion.bluelinktasker.REMOTE_COMMAND\n4. Cat: Default\n5. Mime Type: (empty)\n6. Extra: command:unlock (or lock, start, stop)\n7. Extra: secret:PASTE_YOUR_SECRET_HERE\n8. Package: com.hyundaicompanion.bluelinktasker\n9. Class: com.hyundaicompanion.bluelinktasker.CommandReceiver\n10. Target: Broadcast Receiver\n\nUse a separate task per command. Your secret is shown on the setup screen and below.</string>
+    <string name="tasker_secret_label">Tasker secret (keep private)</string>
+    <string name="tasker_secret_not_set">Set a Tasker secret in Account setup first.</string>
+    <string name="tasker_secret_mismatch">Tasker secret did not match.</string>
+    <string name="tasker_unknown_command">Unknown command: %1$s</string>
+    <string name="setup_required">Complete setup in the app first.</string>
+    <string name="biometric_toggle">Require biometrics for in-app buttons</string>
+    <string name="biometric_title">Confirm</string>
+    <string name="biometric_subtitle">Use your fingerprint or face to run this action.</string>
+    <string name="biometric_not_recognized">Not recognized</string>
+    <string name="biometric_unavailable">Biometric hardware not available for this device.</string>
+    <string name="select_vehicle">Select vehicle</string>
+    <string name="setup_title">Account &amp; vehicle</string>
+    <string name="email">MyHyundai email</string>
+    <string name="password">Password</string>
+    <string name="pin">Blue Link PIN</string>
+    <string name="sign_in_load">Sign in &amp; load vehicles</string>
+    <string name="save_finish">Save &amp; return</string>
+    <string name="regenerate_secret">New Tasker secret</string>
+    <string name="secret_regenerated">New secret generated — update your Tasker tasks.</string>
+    <string name="loading">Working…</string>
+    <string name="error_prefix">Error</string>
+</resources>
