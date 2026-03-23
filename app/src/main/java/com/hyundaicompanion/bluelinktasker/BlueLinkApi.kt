@@ -141,12 +141,11 @@ class BlueLinkApi(
         username: String,
         pin: String,
         vehicle: VehicleInfo,
-        durationMinutes: Int = 10,
-        temperatureF: Int = 70,
+        options: RemoteStartOptions,
     ): Result<String> = withContext(Dispatchers.IO) {
         runCatching {
             if (session.accessToken.isNullOrBlank()) error("Not authenticated")
-            val (path, bodyJson, useOffset4) = startPayload(username, vehicle, durationMinutes, temperatureF)
+            val (path, bodyJson, useOffset4) = startPayload(username, vehicle, options)
             val req = Request.Builder()
                 .url("${env.baseUrl}/$path")
                 .post(bodyJson.toString().toRequestBody(JSON_MEDIA))
@@ -197,8 +196,7 @@ class BlueLinkApi(
     private fun startPayload(
         username: String,
         vehicle: VehicleInfo,
-        durationMinutes: Int,
-        temperatureF: Int,
+        options: RemoteStartOptions,
     ): Triple<String, JSONObject, Boolean> {
         val gen2Ev = vehicle.engineType == VehicleInfo.EngineType.EV && vehicle.generation == "2"
         val path = if (vehicle.engineType == VehicleInfo.EngineType.EV) {
@@ -206,22 +204,30 @@ class BlueLinkApi(
         } else {
             "ac/v2/rcs/rsc/start"
         }
+        val airCtrl = if (options.climateOn) 1 else 0
         val body = JSONObject()
             .put("Ims", 0)
-            .put("airCtrl", 0)
+            .put("airCtrl", airCtrl)
             .put(
                 "airTemp",
                 JSONObject()
                     .put("unit", 1)
-                    .put("value", temperatureF.toString()),
+                    .put("value", options.temperatureF.toString()),
             )
-            .put("defrost", false)
-            .put("heating1", 0)
+            .put("defrost", options.defrost)
+            .put("heating1", options.heatedFeatures)
             .put("username", username)
             .put("vin", vehicle.vin)
         if (!gen2Ev) {
-            body.put("igniOnDuration", durationMinutes)
-            body.put("seatHeaterVentInfo", JSONObject.NULL)
+            body.put("igniOnDuration", options.durationMinutes)
+            val seats = options.validatedSeatClimate()
+            if (seats.isEmpty()) {
+                body.put("seatHeaterVentInfo", JSONObject.NULL)
+            } else {
+                val seatJson = JSONObject()
+                seats.forEach { (k, v) -> seatJson.put(k, v) }
+                body.put("seatHeaterVentInfo", seatJson)
+            }
         }
         val useOffset4 = true
         return Triple(path, body, useOffset4)

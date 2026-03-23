@@ -12,19 +12,20 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 /**
- * Tasker: Send Intent → Action below → Package [com.hyundaicompanion.bluelinktasker]
- * → Class [com.hyundaicompanion.bluelinktasker.CommandReceiver] → Target: Broadcast Receiver
+ * Tasker: Send Intent → Action [ACTION_REMOTE_COMMAND] → Package + this class → Broadcast Receiver.
  * Extras: [EXTRA_COMMAND] = unlock | lock | start | stop
- *         [EXTRA_SECRET] = same value as shown in the app (Tasker secret)
+ *         [EXTRA_SECRET] = Tasker secret from the app
+ * For `start`, optional climate extras — see [RemoteStartOptions] companion constants.
  */
 class CommandReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
-        if (intent?.action != ACTION_REMOTE_COMMAND) return
+        val incoming = intent ?: return
+        if (incoming.action != ACTION_REMOTE_COMMAND) return
         val pendingResult = goAsync()
         val appContext = context.applicationContext
         val prefs = SecurePrefs(appContext)
-        val secret = intent.getStringExtra(EXTRA_SECRET)
+        val secret = incoming.getStringExtra(EXTRA_SECRET)
         val expected = prefs.taskerSecret
         if (expected.isNullOrBlank()) {
             toast(appContext, appContext.getString(R.string.tasker_secret_not_set))
@@ -42,7 +43,7 @@ class CommandReceiver : BroadcastReceiver() {
             return
         }
 
-        val cmd = intent.getStringExtra(EXTRA_COMMAND)?.lowercase().orEmpty()
+        val cmd = incoming.getStringExtra(EXTRA_COMMAND)?.lowercase().orEmpty()
         val repo = BlueLinkRepository.create(appContext)
 
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
@@ -50,7 +51,10 @@ class CommandReceiver : BroadcastReceiver() {
                 val result = when (cmd) {
                     "unlock" -> repo.unlock()
                     "lock" -> repo.lock()
-                    "start" -> repo.remoteStart()
+                    "start" -> {
+                        val opts = RemoteStartOptions.mergeFromIntent(incoming, prefs)
+                        repo.remoteStart(opts)
+                    }
                     "stop" -> repo.remoteStop()
                     else -> {
                         toast(appContext, appContext.getString(R.string.tasker_unknown_command, cmd))

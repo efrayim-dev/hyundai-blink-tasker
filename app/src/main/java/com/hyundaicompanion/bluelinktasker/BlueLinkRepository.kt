@@ -99,12 +99,12 @@ class BlueLinkRepository(
         return api.lock(u, pin, v)
     }
 
-    suspend fun remoteStart(): Result<String> {
+    suspend fun remoteStart(options: RemoteStartOptions = RemoteStartOptions.fromSecurePrefs(prefs)): Result<String> {
         val v = currentVehicle() ?: return Result.failure(IllegalStateException("No vehicle selected"))
         val u = prefs.username ?: return Result.failure(IllegalStateException("No username"))
         val pin = prefs.pin ?: return Result.failure(IllegalStateException("No PIN"))
         ensureSession().getOrElse { return Result.failure(it) }
-        return api.remoteStart(u, pin, v)
+        return api.remoteStart(u, pin, v, options)
     }
 
     suspend fun remoteStop(): Result<String> {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="heated_feature_labels">
+        <item>Off</item>
+        <item>Steering wheel + rear defog</item>
+        <item>Rear window heat only</item>
+        <item>Steering wheel only</item>
+    </string-array>
+    <string-array name="seat_climate_labels">
+        <item>Not set</item>
+        <item>Off</item>
+        <item>Low heat</item>
+        <item>Medium heat</item>
+        <item>High heat</item>
+    </string-array>
+</resources>

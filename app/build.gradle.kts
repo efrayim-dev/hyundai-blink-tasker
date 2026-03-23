@@ -11,13 +11,14 @@ android {
         applicationId = "com.hyundaicompanion.bluelinktasker"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -36,6 +37,17 @@ android {
 
     buildFeatures {
         viewBinding = true
+    }
+
+    @Suppress("DEPRECATION")
+    applicationVariants.configureEach {
+        val ver = versionName
+        val bt = buildType.name
+        outputs.configureEach {
+            val out = this as? com.android.build.gradle.internal.api.ApkVariantOutputImpl
+                ?: return@configureEach
+            out.outputFileName = "HyundaiBlueLinkTasker-v$ver-$bt.apk"
+        }
     }
 }
 

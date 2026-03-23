@@ -29,12 +29,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Assemble debug APK
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+      - name: Assemble release APK
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
 
-      - name: Upload APK
+      - name: Upload release APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: HyundaiBlueLinkTasker-release-apk
+          path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error

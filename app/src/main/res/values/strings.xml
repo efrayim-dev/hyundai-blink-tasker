@@ -9,7 +9,7 @@
     <string name="btn_stop">Remote stop</string>
     <string name="settings">Account &amp; vehicle</string>
     <string name="tasker_help">Tasker setup</string>
-    <string name="tasker_help_body">1. Open Tasker → Tasks → add a task.\n2. Add action: System → Send Intent.\n3. Action: com.hyundaicompanion.bluelinktasker.REMOTE_COMMAND\n4. Cat: Default\n5. Mime Type: (empty)\n6. Extra: command:unlock (or lock, start, stop)\n7. Extra: secret:PASTE_YOUR_SECRET_HERE\n8. Package: com.hyundaicompanion.bluelinktasker\n9. Class: com.hyundaicompanion.bluelinktasker.CommandReceiver\n10. Target: Broadcast Receiver\n\nUse a separate task per command. Your secret is shown on the setup screen and below.</string>
+    <string name="tasker_help_body">1. Open Tasker → Tasks → add a task.\n2. Add action: System → Send Intent.\n3. Action: com.hyundaicompanion.bluelinktasker.REMOTE_COMMAND\n4. Cat: Default\n5. Mime Type: (empty)\n6. Extra: command:unlock (or lock, start, stop)\n7. Extra: secret:PASTE_YOUR_SECRET_HERE\n8. Package: com.hyundaicompanion.bluelinktasker\n9. Class: com.hyundaicompanion.bluelinktasker.CommandReceiver\n10. Target: Broadcast Receiver\n\nUse a separate task per command. Your secret is shown in the app.\n\nFor command start, the app uses your saved climate defaults unless you override with extras:\n• start_duration (number, minutes 1–30)\n• start_temp (number, °F 60–90)\n• start_climate (true/false or 1/0 — run HVAC)\n• start_defrost (true/false)\n• start_heated (0–3: off, steering+rear, rear only, steering only)\n• start_seat_json (optional JSON, e.g. {\"driverSeat\":6,\"passengerSeat\":7}) — seat levels 0–8 (0=off, 6–8=low/med/high heat)\n• Or: seat_driver, seat_passenger, seat_rear_left, seat_rear_right (each 0–8)</string>
     <string name="tasker_secret_label">Tasker secret (keep private)</string>
     <string name="tasker_secret_not_set">Set a Tasker secret in Account setup first.</string>
     <string name="tasker_secret_mismatch">Tasker secret did not match.</string>
@@ -31,4 +31,16 @@
     <string name="secret_regenerated">New secret generated — update your Tasker tasks.</string>
     <string name="loading">Working…</string>
     <string name="error_prefix">Error</string>
+    <string name="climate_section_title">Remote start climate</string>
+    <string name="climate_duration_hint">Run time (minutes, 1–30)</string>
+    <string name="climate_temp_hint">Target temp (°F, 60–90)</string>
+    <string name="climate_hvac_on">Climate (HVAC) on</string>
+    <string name="climate_defrost">Defrost</string>
+    <string name="climate_heated_features">Heated features</string>
+    <string name="climate_seats_title">Seat heat (optional)</string>
+    <string name="climate_seats_sub">Not set = leave unchanged on vehicle API. Gen 2 EV ignores duration/seats.</string>
+    <string name="seat_driver">Driver</string>
+    <string name="seat_passenger">Passenger</string>
+    <string name="seat_rear_left">Rear left</string>
+    <string name="seat_rear_right">Rear right</string>
 </resources>

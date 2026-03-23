@@ -79,6 +79,43 @@ class SecurePrefs(context: Context) {
         get() = prefs.getBoolean(KEY_SETUP_DONE, false)
         set(v) = prefs.edit().putBoolean(KEY_SETUP_DONE, v).apply()
 
+    var rsDurationMinutes: Int
+        get() = prefs.getInt(KEY_RS_DUR, 10)
+        set(v) = prefs.edit().putInt(KEY_RS_DUR, v.coerceIn(1, 30)).apply()
+
+    var rsTempF: Int
+        get() = prefs.getInt(KEY_RS_TEMP, 70)
+        set(v) = prefs.edit().putInt(KEY_RS_TEMP, v.coerceIn(60, 90)).apply()
+
+    var rsClimateOn: Boolean
+        get() = prefs.getBoolean(KEY_RS_CLIMATE, false)
+        set(v) = prefs.edit().putBoolean(KEY_RS_CLIMATE, v).apply()
+
+    var rsDefrost: Boolean
+        get() = prefs.getBoolean(KEY_RS_DEFROST, false)
+        set(v) = prefs.edit().putBoolean(KEY_RS_DEFROST, v).apply()
+
+    var rsHeatedFeatures: Int
+        get() = prefs.getInt(KEY_RS_HEATED, 0)
+        set(v) = prefs.edit().putInt(KEY_RS_HEATED, v.coerceIn(0, 3)).apply()
+
+    /** 0–8 per API, or -1 = not sent */
+    var rsSeatDriver: Int
+        get() = prefs.getInt(KEY_RS_SEAT_DR, -1)
+        set(v) = prefs.edit().putInt(KEY_RS_SEAT_DR, v).apply()
+
+    var rsSeatPassenger: Int
+        get() = prefs.getInt(KEY_RS_SEAT_PS, -1)
+        set(v) = prefs.edit().putInt(KEY_RS_SEAT_PS, v).apply()
+
+    var rsSeatRearLeft: Int
+        get() = prefs.getInt(KEY_RS_SEAT_RL, -1)
+        set(v) = prefs.edit().putInt(KEY_RS_SEAT_RL, v).apply()
+
+    var rsSeatRearRight: Int
+        get() = prefs.getInt(KEY_RS_SEAT_RR, -1)
+        set(v) = prefs.edit().putInt(KEY_RS_SEAT_RR, v).apply()
+
     fun clearSession() {
         prefs.edit()
             .remove(KEY_ACCESS)
@@ -108,5 +145,14 @@ class SecurePrefs(context: Context) {
         private const val KEY_TASKER_SECRET = "tasker_secret"
         private const val KEY_BIO_MANUAL = "bio_manual"
         private const val KEY_SETUP_DONE = "setup_done"
+        private const val KEY_RS_DUR = "rs_duration"
+        private const val KEY_RS_TEMP = "rs_temp_f"
+        private const val KEY_RS_CLIMATE = "rs_climate"
+        private const val KEY_RS_DEFROST = "rs_defrost"
+        private const val KEY_RS_HEATED = "rs_heated"
+        private const val KEY_RS_SEAT_DR = "rs_seat_dr"
+        private const val KEY_RS_SEAT_PS = "rs_seat_ps"
+        private const val KEY_RS_SEAT_RL = "rs_seat_rl"
+        private const val KEY_RS_SEAT_RR = "rs_seat_rr"
     }
 }

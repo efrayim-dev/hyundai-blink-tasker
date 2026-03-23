@@ -9,12 +9,12 @@ Unofficial Android app for **Hyundai US** MyHyundai / BlueLink: unlock, lock, re
 Open in Android Studio or run:
 
 ```bash
-./gradlew assembleDebug
+./gradlew assembleRelease
 ```
 
-Debug APK: `app/build/outputs/apk/debug/`.
+Release APK (renamed by Gradle): `app/build/outputs/apk/release/HyundaiBlueLinkTasker-v{version}-release.apk` (e.g. `HyundaiBlueLinkTasker-v1.1.0-release.apk`).
 
-CI builds on every push to `main` (workflow **Build APK**). Open [Actions](https://github.com/efrayim-dev/hyundai-blink-tasker/actions), select the latest run, and download the **app-debug-apk** artifact (zip containing `app-debug.apk`).
+CI builds on every push to `main` (workflow **Build APK**). Open [Actions](https://github.com/efrayim-dev/hyundai-blink-tasker/actions), select the latest run, and download the **HyundaiBlueLinkTasker-release-apk** artifact.
 
 ## Tasker
 

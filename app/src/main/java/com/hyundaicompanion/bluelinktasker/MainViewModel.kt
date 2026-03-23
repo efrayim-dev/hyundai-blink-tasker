@@ -16,7 +16,7 @@ class MainViewModel(
 
     fun unlock() = runCommand { repository.unlock() }
     fun lock() = runCommand { repository.lock() }
-    fun remoteStart() = runCommand { repository.remoteStart() }
+    fun remoteStart(options: RemoteStartOptions) = runCommand { repository.remoteStart(options) }
     fun remoteStop() = runCommand { repository.remoteStop() }
 
     private fun runCommand(block: suspend () -> Result<String>) {

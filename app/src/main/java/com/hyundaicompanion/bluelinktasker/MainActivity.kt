@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -36,9 +37,16 @@ class MainActivity : AppCompatActivity() {
             prefs.requireBiometricForManualActions = checked
         }
 
+        setupClimateSpinners()
+
         binding.btnUnlock.setOnClickListener { runWithOptionalBiometric { viewModel.unlock() } }
         binding.btnLock.setOnClickListener { runWithOptionalBiometric { viewModel.lock() } }
-        binding.btnStart.setOnClickListener { runWithOptionalBiometric { viewModel.remoteStart() } }
+        binding.btnStart.setOnClickListener {
+            runWithOptionalBiometric {
+                val opts = readClimateFromUiAndPersist()
+                viewModel.remoteStart(opts)
+            }
+        }
         binding.btnStop.setOnClickListener { runWithOptionalBiometric { viewModel.remoteStop() } }
 
         binding.btnTaskerHelp.setOnClickListener {
@@ -92,10 +100,71 @@ class MainActivity : AppCompatActivity() {
         binding.vehicleTitle.text = getString(R.string.vehicle_label, v?.nickname ?: "—")
         binding.secretValue.text = prefs.taskerSecret ?: getString(R.string.tasker_secret_not_set)
 
+        binding.inputRsDuration.setText(prefs.rsDurationMinutes.toString())
+        binding.inputRsTemp.setText(prefs.rsTempF.toString())
+        binding.switchRsClimate.isChecked = prefs.rsClimateOn
+        binding.switchRsDefrost.isChecked = prefs.rsDefrost
+        binding.spinnerRsHeated.setSelection(prefs.rsHeatedFeatures.coerceIn(0, 3))
+        binding.spinnerSeatDriver.setSelection(seatLevelToSpinnerIndex(prefs.rsSeatDriver))
+        binding.spinnerSeatPassenger.setSelection(seatLevelToSpinnerIndex(prefs.rsSeatPassenger))
+        binding.spinnerSeatRearLeft.setSelection(seatLevelToSpinnerIndex(prefs.rsSeatRearLeft))
+        binding.spinnerSeatRearRight.setSelection(seatLevelToSpinnerIndex(prefs.rsSeatRearRight))
+
         val ready = prefs.setupComplete && v != null
         listOf(binding.btnUnlock, binding.btnLock, binding.btnStart, binding.btnStop).forEach {
             it.isEnabled = ready
         }
+    }
+
+    private fun setupClimateSpinners() {
+        val heatedAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.heated_feature_labels,
+            android.R.layout.simple_spinner_dropdown_item,
+        )
+        binding.spinnerRsHeated.adapter = heatedAdapter
+        val seatAdapter = ArrayAdapter.createFromResource(
+            this,
+            R.array.seat_climate_labels,
+            android.R.layout.simple_spinner_dropdown_item,
+        )
+        binding.spinnerSeatDriver.adapter = seatAdapter
+        binding.spinnerSeatPassenger.adapter = seatAdapter
+        binding.spinnerSeatRearLeft.adapter = seatAdapter
+        binding.spinnerSeatRearRight.adapter = seatAdapter
+    }
+
+    private fun readClimateFromUiAndPersist(): RemoteStartOptions {
+        val dur = binding.inputRsDuration.text?.toString()?.toIntOrNull()?.coerceIn(1, 30) ?: 10
+        val temp = binding.inputRsTemp.text?.toString()?.toIntOrNull()?.coerceIn(60, 90) ?: 70
+        prefs.rsDurationMinutes = dur
+        prefs.rsTempF = temp
+        prefs.rsClimateOn = binding.switchRsClimate.isChecked
+        prefs.rsDefrost = binding.switchRsDefrost.isChecked
+        prefs.rsHeatedFeatures = binding.spinnerRsHeated.selectedItemPosition.coerceIn(0, 3)
+        prefs.rsSeatDriver = spinnerIndexToSeatStored(binding.spinnerSeatDriver.selectedItemPosition)
+        prefs.rsSeatPassenger = spinnerIndexToSeatStored(binding.spinnerSeatPassenger.selectedItemPosition)
+        prefs.rsSeatRearLeft = spinnerIndexToSeatStored(binding.spinnerSeatRearLeft.selectedItemPosition)
+        prefs.rsSeatRearRight = spinnerIndexToSeatStored(binding.spinnerSeatRearRight.selectedItemPosition)
+        return RemoteStartOptions.fromSecurePrefs(prefs)
+    }
+
+    private fun spinnerIndexToSeatStored(index: Int): Int = when (index) {
+        0 -> -1
+        1 -> 0
+        2 -> 6
+        3 -> 7
+        4 -> 8
+        else -> -1
+    }
+
+    private fun seatLevelToSpinnerIndex(level: Int): Int = when (level) {
+        -1 -> 0
+        0 -> 1
+        6 -> 2
+        7 -> 3
+        8 -> 4
+        else -> 0
     }
 
     private fun runWithOptionalBiometric(action: () -> Unit) {
