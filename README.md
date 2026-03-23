@@ -14,7 +14,7 @@ Open in Android Studio or run:
 
 Debug APK: `app/build/outputs/apk/debug/`.
 
-CI builds on push to `main` and uploads the debug APK as a workflow artifact.
+CI builds on every push to `main` (workflow **Build APK**). Open [Actions](https://github.com/efrayim-dev/hyundai-blink-tasker/actions), select the latest run, and download the **app-debug-apk** artifact (zip containing `app-debug.apk`).
 
 ## Tasker
 
